@@ -51,18 +51,20 @@ init_db()
 # =============================
 
 login_html = """
+
 <!DOCTYPE html>
 <html>
+
 <head>
 
-<title>Login</title>
+<title>Student Chat Login</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
 
 body{
-background: linear-gradient(to right,#667eea,#764ba2);
+background: linear-gradient(135deg,#667eea,#764ba2);
 height:100vh;
 display:flex;
 justify-content:center;
@@ -70,7 +72,7 @@ align-items:center;
 }
 
 .card{
-width:350px;
+width:360px;
 padding:30px;
 border-radius:20px;
 }
@@ -83,26 +85,30 @@ border-radius:20px;
 
 <div class="card shadow-lg">
 
-<h3 class="text-center mb-4">Student Chat Login</h3>
+<h3 class="text-center mb-4">🎓 Student Chat System</h3>
 
 <form method="POST">
 
-<input name="username" class="form-control mb-3" placeholder="Username">
+<input name="username" class="form-control mb-3" placeholder="Username" required>
 
-<input name="password" type="password" class="form-control mb-3" placeholder="Password">
+<input name="password" type="password" class="form-control mb-3" placeholder="Password" required>
 
 <button class="btn btn-primary w-100">Login</button>
 
 </form>
 
 <div class="text-center mt-3">
+
 <a href="/register">Create account</a>
+
 </div>
 
 </div>
 
 </body>
+
 </html>
+
 """
 
 
@@ -111,18 +117,20 @@ border-radius:20px;
 # =============================
 
 register_html = """
+
 <!DOCTYPE html>
 <html>
+
 <head>
 
-<title>Register</title>
+<title>Create Account</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
 
 body{
-background: linear-gradient(to right,#ff758c,#ff7eb3);
+background: linear-gradient(135deg,#ff758c,#ff7eb3);
 height:100vh;
 display:flex;
 justify-content:center;
@@ -130,7 +138,7 @@ align-items:center;
 }
 
 .card{
-width:350px;
+width:360px;
 padding:30px;
 border-radius:20px;
 }
@@ -147,63 +155,93 @@ border-radius:20px;
 
 <form method="POST">
 
-<input name="username" class="form-control mb-3" placeholder="Username">
+<input name="username" class="form-control mb-3" placeholder="Username" required>
 
-<input name="password" type="password" class="form-control mb-3" placeholder="Password">
+<input name="password" type="password" class="form-control mb-3" placeholder="Password" required>
 
 <button class="btn btn-success w-100">Register</button>
 
 </form>
 
 <div class="text-center mt-3">
+
 <a href="/">Back to login</a>
+
 </div>
 
 </div>
 
 </body>
+
 </html>
+
 """
 
 
 # =============================
-# CHAT PAGE
+# CHAT PAGE (NEW PROFESSIONAL UI)
 # =============================
 
 chat_html = """
+
 <!DOCTYPE html>
 <html>
 
 <head>
 
-<title>Chat Room</title>
+<title>Student Chat System</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
 
 body{
-background:#f4f6fb;
+background:#eef2f7;
+}
+
+.chat-container{
+max-width:900px;
+margin:auto;
+margin-top:20px;
 }
 
 .chat-box{
-height:400px;
+height:420px;
 overflow-y:scroll;
 background:white;
-padding:15px;
-border-radius:10px;
+padding:20px;
+border-radius:15px;
+box-shadow:0px 3px 10px rgba(0,0,0,0.1);
 }
 
 .msg{
-padding:8px 12px;
-margin:5px;
-border-radius:15px;
-background:#e3f2fd;
+padding:10px 15px;
+margin:8px;
+border-radius:20px;
+max-width:60%;
 display:inline-block;
 }
 
-.navbar{
-margin-bottom:20px;
+.me{
+background:#0d6efd;
+color:white;
+margin-left:auto;
+display:block;
+}
+
+.other{
+background:#e9ecef;
+}
+
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:15px;
+}
+
+.file-upload{
+margin-top:10px;
 }
 
 </style>
@@ -212,37 +250,42 @@ margin-bottom:20px;
 
 <body>
 
-<nav class="navbar navbar-dark bg-primary px-3">
+<div class="chat-container">
 
-<span class="navbar-brand">Student Chat System</span>
+<div class="topbar">
 
-<a href="/logout" class="btn btn-light">Logout</a>
+<h4>🎓 Student Chat System</h4>
 
-</nav>
+<div>
+
+<span class="badge bg-success">Online: {{username}}</span>
+
+<a href="/logout" class="btn btn-danger btn-sm">Logout</a>
+
+</div>
+
+</div>
 
 
-<div class="container">
-
-<div id="chat" class="chat-box mb-3"></div>
+<div id="chat" class="chat-box"></div>
 
 
-<form id="msgForm" class="d-flex gap-2">
+<form id="msgForm" class="d-flex gap-2 mt-3">
 
-<input id="msg" class="form-control" placeholder="Type message">
+<input id="msg" class="form-control" placeholder="Type message..." required>
 
 <button class="btn btn-primary">Send</button>
 
 </form>
 
 
-<form action="/upload" method="POST" enctype="multipart/form-data" class="mt-3 d-flex gap-2">
+<form action="/upload" method="POST" enctype="multipart/form-data" class="file-upload d-flex gap-2">
 
 <input type="file" name="file" class="form-control">
 
-<button class="btn btn-success">Upload File</button>
+<button class="btn btn-success">Upload</button>
 
 </form>
-
 
 </div>
 
@@ -254,21 +297,33 @@ margin-bottom:20px;
 
 var socket = io();
 
+var username = "{{username}}";
+
 
 socket.on("message", function(msg){
 
-document.getElementById("chat").innerHTML +=
+var chat=document.getElementById("chat");
 
-"<div class='msg'>" + msg + "</div><br>";
+if(msg.startsWith(username + ":")){
+
+chat.innerHTML += "<div class='msg me'>" + msg + "</div>";
+
+}else{
+
+chat.innerHTML += "<div class='msg other'>" + msg + "</div>";
+
+}
+
+chat.scrollTop=chat.scrollHeight;
 
 });
 
 
-document.getElementById("msgForm").onsubmit = function(e){
+document.getElementById("msgForm").onsubmit=function(e){
 
 e.preventDefault();
 
-var msg = document.getElementById("msg").value;
+var msg=document.getElementById("msg").value;
 
 socket.send(msg);
 
@@ -278,9 +333,10 @@ document.getElementById("msg").value="";
 
 </script>
 
-
 </body>
+
 </html>
+
 """
 
 
@@ -291,7 +347,7 @@ document.getElementById("msg").value="";
 @app.route("/", methods=["GET","POST"])
 def login():
 
-    if request.method == "POST":
+    if request.method=="POST":
 
         username=request.form["username"]
         password=request.form["password"]
@@ -302,6 +358,7 @@ def login():
         c.execute("SELECT * FROM users WHERE username=? AND password=?",(username,password))
 
         user=c.fetchone()
+
         conn.close()
 
         if user:
@@ -346,7 +403,7 @@ def chat():
 
         return redirect("/")
 
-    return render_template_string(chat_html)
+    return render_template_string(chat_html, username=session["user"])
 
 
 @app.route("/logout")
