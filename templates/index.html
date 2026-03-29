@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>Student Chat</title>
+
+<title>Student Chat System</title>
 
 <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 
@@ -10,47 +12,111 @@
 body{
 font-family: Arial;
 background: linear-gradient(to right,#4facfe,#00f2fe);
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
+margin:0;
+}
+
+.container{
+max-width:700px;
+margin:auto;
+margin-top:40px;
 }
 
 .chat-box{
+
 background:white;
 padding:20px;
-border-radius:15px;
-width:400px;
-box-shadow:0px 5px 15px rgba(0,0,0,0.2);
+border-radius:20px;
+box-shadow:0px 5px 20px rgba(0,0,0,0.2);
+
 }
 
-h2{
-text-align:center;
+.header{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:15px;
+
 }
 
-#messages{
-height:250px;
+.chat-area{
+
+height:400px;
 overflow-y:auto;
 border:1px solid #ddd;
-padding:10px;
-margin-bottom:10px;
+padding:15px;
+border-radius:10px;
+background:#fafafa;
+
+}
+
+.msg{
+
+padding:10px 15px;
+margin:8px 0;
+border-radius:20px;
+max-width:60%;
+display:inline-block;
+
+}
+
+.me{
+
+background:#4facfe;
+color:white;
+margin-left:auto;
+display:block;
+
+}
+
+.other{
+
+background:#e9ecef;
+
+}
+
+.input-area{
+
+margin-top:10px;
+display:flex;
+gap:10px;
+
 }
 
 input{
+
+flex:1;
 padding:10px;
-width:70%;
+border-radius:10px;
+border:1px solid #ccc;
+
 }
 
 button{
-padding:10px;
+
+padding:10px 15px;
 background:#4facfe;
-color:white;
 border:none;
+color:white;
+border-radius:10px;
 cursor:pointer;
+
 }
 
 button:hover{
+
 background:#007bff;
+
+}
+
+.logout{
+
+text-decoration:none;
+background:red;
+color:white;
+padding:5px 10px;
+border-radius:8px;
+
 }
 
 </style>
@@ -59,11 +125,48 @@ background:#007bff;
 
 <body>
 
+<div class="container">
+
 <div class="chat-box">
 
-<h2>Student Chat Room</h2>
 
-<div id="messages"></div>
+<div class="header">
+
+<h2>🎓 Student Chat Room</h2>
+
+<div>
+
+<b>{{username}}</b>
+
+<a href="/logout" class="logout">Logout</a>
+
+</div>
+
+</div>
+
+
+<div id="chat" class="chat-area">
+
+
+{% for user, msg, time in messages %}
+
+<div class="msg {% if user == username %}me{% else %}other{% endif %}">
+
+<b>{{user}}</b>: {{msg}}
+
+<br>
+
+<small>{{time}}</small>
+
+</div>
+
+{% endfor %}
+
+
+</div>
+
+
+<div class="input-area">
 
 <input id="message" placeholder="Type message...">
 
@@ -71,19 +174,45 @@ background:#007bff;
 
 </div>
 
+
+</div>
+
+</div>
+
+
 <script>
 
 var socket = io();
 
+var username = "{{username}}";
+
+
 socket.on("message", function(msg){
 
-document.getElementById("messages").innerHTML += "<p>"+msg+"</p>";
+var chat=document.getElementById("chat");
+
+
+if(msg.startsWith(username + ":")){
+
+chat.innerHTML += "<div class='msg me'>"+msg+"</div>";
+
+}else{
+
+chat.innerHTML += "<div class='msg other'>"+msg+"</div>";
+
+}
+
+
+chat.scrollTop=chat.scrollHeight;
 
 });
+
 
 function sendMessage(){
 
 var msg=document.getElementById("message").value;
+
+if(msg==="") return;
 
 socket.send(msg);
 
@@ -91,7 +220,9 @@ document.getElementById("message").value="";
 
 }
 
+
 </script>
 
 </body>
+
 </html>
