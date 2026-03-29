@@ -1,4 +1,4 @@
-from flask import Flask, render_template_string, request, redirect, session, send_from_directory
+from flask import Flask, render_template, render_template_string, request, redirect, session, send_from_directory
 from flask_socketio import SocketIO, send
 import os
 import sqlite3
@@ -179,168 +179,6 @@ border-radius:20px;
 
 
 # =============================
-# CHAT PAGE (NEW PROFESSIONAL UI)
-# =============================
-
-chat_html = """
-
-<!DOCTYPE html>
-<html>
-
-<head>
-
-<title>Student Chat System</title>
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<style>
-
-body{
-background:#eef2f7;
-}
-
-.chat-container{
-max-width:900px;
-margin:auto;
-margin-top:20px;
-}
-
-.chat-box{
-height:420px;
-overflow-y:scroll;
-background:white;
-padding:20px;
-border-radius:15px;
-box-shadow:0px 3px 10px rgba(0,0,0,0.1);
-}
-
-.msg{
-padding:10px 15px;
-margin:8px;
-border-radius:20px;
-max-width:60%;
-display:inline-block;
-}
-
-.me{
-background:#0d6efd;
-color:white;
-margin-left:auto;
-display:block;
-}
-
-.other{
-background:#e9ecef;
-}
-
-.topbar{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:15px;
-}
-
-.file-upload{
-margin-top:10px;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="chat-container">
-
-<div class="topbar">
-
-<h4>🎓 Student Chat System</h4>
-
-<div>
-
-<span class="badge bg-success">Online: {{username}}</span>
-
-<a href="/logout" class="btn btn-danger btn-sm">Logout</a>
-
-</div>
-
-</div>
-
-
-<div id="chat" class="chat-box"></div>
-
-
-<form id="msgForm" class="d-flex gap-2 mt-3">
-
-<input id="msg" class="form-control" placeholder="Type message..." required>
-
-<button class="btn btn-primary">Send</button>
-
-</form>
-
-
-<form action="/upload" method="POST" enctype="multipart/form-data" class="file-upload d-flex gap-2">
-
-<input type="file" name="file" class="form-control">
-
-<button class="btn btn-success">Upload</button>
-
-</form>
-
-</div>
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
-
-
-<script>
-
-var socket = io();
-
-var username = "{{username}}";
-
-
-socket.on("message", function(msg){
-
-var chat=document.getElementById("chat");
-
-if(msg.startsWith(username + ":")){
-
-chat.innerHTML += "<div class='msg me'>" + msg + "</div>";
-
-}else{
-
-chat.innerHTML += "<div class='msg other'>" + msg + "</div>";
-
-}
-
-chat.scrollTop=chat.scrollHeight;
-
-});
-
-
-document.getElementById("msgForm").onsubmit=function(e){
-
-e.preventDefault();
-
-var msg=document.getElementById("msg").value;
-
-socket.send(msg);
-
-document.getElementById("msg").value="";
-
-}
-
-</script>
-
-</body>
-
-</html>
-
-"""
-
-
-# =============================
 # ROUTES
 # =============================
 
@@ -382,10 +220,8 @@ def register():
         c=conn.cursor()
 
         try:
-
             c.execute("INSERT INTO users(username,password) VALUES (?,?)",(username,password))
             conn.commit()
-
         except:
             pass
 
@@ -411,9 +247,11 @@ def chat():
 
     conn.close()
 
-    return render_template("index.html",
-                           username=session["user"],
-                           messages=messages)
+    return render_template(
+        "index.html",
+        username=session["user"],
+        messages=messages
+    )
 
 
 @app.route("/logout")
@@ -428,13 +266,11 @@ def logout():
 def upload():
 
     if "file" not in request.files:
-
         return redirect("/chat")
 
     file=request.files["file"]
 
     if file.filename=="":
-
         return redirect("/chat")
 
     filepath=os.path.join(UPLOAD_FOLDER,file.filename)
