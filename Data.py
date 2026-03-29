@@ -400,10 +400,20 @@ def register():
 def chat():
 
     if "user" not in session:
-
         return redirect("/")
 
-    return render_template_string(chat_html, username=session["user"])
+    conn = sqlite3.connect(DB)
+    c = conn.cursor()
+
+    c.execute("SELECT username, message, time FROM messages ORDER BY id ASC")
+
+    messages = c.fetchall()
+
+    conn.close()
+
+    return render_template("index.html",
+                           username=session["user"],
+                           messages=messages)
 
 
 @app.route("/logout")
